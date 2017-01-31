@@ -16,6 +16,7 @@ Use this ansible playbook to setup a fresh server with the following components:
 * Directories to deploy Rails with Capistrano and Puma App Server (see below)
 * Swapfile (useful for small DO instances)
 * Tools (tmux, vim, htop, git, wget, curl etc.)
+* DB backup using backup gem
 
 ## Prerequisites & Config
 
