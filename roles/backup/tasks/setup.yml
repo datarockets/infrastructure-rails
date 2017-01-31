@@ -1,0 +1,19 @@
+- name: Install backup gem
+  command: su - {{ deploy_user }} -c "gem install backup"
+
+- name: Run Backup generator
+  command: su - {{ deploy_user }} -c "backup generate:model --trigger=db_backup"
+
+- name: Copy new backups configs
+  template: src=db_backup dest={{ deploy_dir }}/Backup/models/db_backup.rb owner={{ deploy_user }} group={{ deploy_user }}
+
+- name: Install whenever gem
+  command: su - {{ deploy_user }} -c "gem install whenever"
+
+- name: Backup Cronjob
+  cron:
+    name: "backup {{ postgres_db_name }}"
+    hour: "10"
+    minute: "00"
+    job: "backup perform -t db_backup"
+    user: "{{ deploy_user }}"

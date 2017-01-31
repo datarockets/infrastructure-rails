@@ -1,0 +1,3 @@
+---
+- include: setup.yml
+  when: backup_enabled is defined and backup_enabled == true

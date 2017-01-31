@@ -24,3 +24,4 @@
     - memcached
     - redis
     - elasticsearch
+    - backup

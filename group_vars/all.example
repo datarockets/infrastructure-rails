@@ -34,6 +34,8 @@ postgres_db_password: SET_PASSWORD_HERE
 ruby_version: 2.2.3
 
 # Rails
+rails_use_dot_env: true
+rails_env: production
 rails_secret_key_base: SET_RAILS_SECRET_KEY_BASE_HERE
 puma_workers: 4
 puma_threads: 4,16
@@ -51,3 +53,16 @@ redis_enabled: false
 
 # Memchached
 memchached_enabled: false
+
+#Backups
+backup_enabled: false
+backup_store: s3
+backup_s3_access_key_id:
+backup_s3_secret_access_key:
+backup_s3_bucket:
+backup_s3_region:
+backup_scp_username:
+backup_scp_password:
+backup_scp_ip:
+backup_scp_port: 22
+backup_scp_path: '~/backups/'

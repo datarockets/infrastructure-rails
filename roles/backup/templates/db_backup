@@ -1,0 +1,61 @@
+# encoding: utf-8
+
+##
+# Backup Generated: db_backup
+# Once configured, you can run the backup with the following command:
+#
+# $ backup perform -t db_backup [-c <path_to_configuration_file>]
+#
+# For more information about Backup's components, see the documentation at:
+# http://backup.github.io/backup
+#
+Model.new(:db_backup, 'Description for {{ postgres_db_name }}') do
+
+  ##
+  # PostgreSQL [Database]
+  #
+  database PostgreSQL do |db|
+    db.name               = "{{ postgres_db_name }}"
+    db.username           = "{{ postgres_db_username }}"
+    db.password           = "{{ postgres_db_password }}"
+    db.host               = "localhost"
+  end
+
+  {% if backup_store is defined and backup_store == 'scp' %}
+  ##
+  # SCP (Secure Copy) [Storage]
+  #
+  store_with SCP do |server|
+    server.username   = "{{ backup_scp_username }}"
+    server.password   = "{{ backup_scp_password }}"
+    server.ip         = "{{ backup_scp_ip }}"
+    server.port       = {{ backup_scp_port }}
+    server.path       = "{{ backup_scp_path }}"
+    server.keep       = 10
+  end
+
+  {% endif %}
+
+
+  {% if backup_store is defined and backup_store == 's3' %}
+  ##
+  # Amazon Simple Storage Service [Storage]
+  #
+  store_with S3 do |s3|
+    # AWS Credentials
+    s3.access_key_id     = "{{ backup_s3_access_key_id }}"
+    s3.secret_access_key = "{{ backup_s3_secret_access_key }}"
+
+    s3.region            = "{{ backup_s3_bucket }}"
+    s3.bucket            = "{{ backup_s3_region }}"
+    s3.path              = "/backups"
+    s3.keep              = 10
+  end
+
+  {% endif %}
+
+  ##
+  # Gzip [Compressor]
+  #
+  compress_with Gzip
+end
