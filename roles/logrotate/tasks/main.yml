@@ -1,0 +1,11 @@
+---
+- name: Add rotate config file
+  template: src=logrotate dest=/etc/logrotate.d/{{ deploy_app_name }} owner=root group=root
+
+- name: Run backgorunf task for logrotate
+  cron:
+    name: "logrotate"
+    hour: "10"
+    minute: "00"
+    job: "/usr/sbin/logrotate -f /etc/logrotate.d/{{ deploy_app_name }}"
+    user: "root"
