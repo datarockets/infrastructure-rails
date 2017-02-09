@@ -14,14 +14,14 @@
       raw: update-alternatives --install /usr/bin/python python /usr/bin/python2.7 1
   roles:
     - common
-    - deploy-user
-    - postgres
-    - nginx
-    - certbot
-    - ruby
-    - rails
-    - monit
-    - memcached
-    - redis
-    - elasticsearch
-    - backup
+    # - deploy-user
+    # - postgres
+    # - nginx
+    # - certbot
+    # - ruby
+    # - rails
+    # - monit
+    # - memcached
+    # - redis
+    # - elasticsearch
+    # - backup

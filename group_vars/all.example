@@ -3,6 +3,7 @@
 deploy_dir: /home/deploy/
 deploy_user: deploy
 deploy_password: SET_PASSWORD_HERE
+deploy_app_dir: app
 deploy_app_name: app
 deploy_server_hostname: SET_HOSTNAME_HERE
 

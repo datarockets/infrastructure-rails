@@ -7,3 +7,6 @@
 
 - name: install bundler
   command: su - {{ deploy_user }} -c "gem install bundler"
+
+- name: gem update
+  command: su - {{ deploy_user }} -c "gem update --system"
