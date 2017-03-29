@@ -1,0 +1,3 @@
+---
+- include: setup.yml
+  when: swap_enabled is defined and swap_enabled == true
