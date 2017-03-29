@@ -1,12 +1,12 @@
 ---
-- name: install ruby {{ ruby_version }}
+- name: Install ruby {{ ruby_version }}
   command: su - {{ deploy_user }} -c "rbenv install {{ ruby_version }}"
 
-- name: set default version
+- name: Set default version
   command: su - {{ deploy_user }} -c "rbenv global {{ ruby_version }}"
 
-- name: install bundler
+- name: Install bundler
   command: su - {{ deploy_user }} -c "gem install bundler"
 
-- name: gem update
+- name: Gem update
   command: su - {{ deploy_user }} -c "gem update --system"
