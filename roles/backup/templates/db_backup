@@ -18,7 +18,7 @@ Model.new(:db_backup, 'Backups for {{ postgres_db_name }}') do
     encryption.salt = true
   end
   # To decrypt your backup, use the following command:
-  # $ openssl aes-256-cbc -d -in vital.tar.enc -out vital.tar
+  # $ openssl aes-256-cbc -d -in {{ postgres_db_name }}.tar.enc -out {{ postgres_db_name }}.tar
 
   {% if backup_store is defined and backup_store == 'scp' %}
   store_with SCP do |server|
