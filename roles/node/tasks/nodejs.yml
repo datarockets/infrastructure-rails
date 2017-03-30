@@ -1,0 +1,11 @@
+---
+- name: Install node
+  command: /home/{{ deploy_user }}/.nodenv/bin/nodenv install {{ nodenv_node_version }}
+
+- name: Install node aliases
+  git:
+    repo: https://github.com/nodenv/nodenv-aliases.git
+    dest: /home/{{ deploy_user }}/.nodenv/plugins/node-aliases
+
+- name: Set global node version
+  command: /home/{{ deploy_user }}/.nodenv/bin/nodenv global {{ nodenv_node_version }}

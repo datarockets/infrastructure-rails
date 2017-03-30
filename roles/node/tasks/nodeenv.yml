@@ -1,0 +1,30 @@
+---
+- name: Install nodenv
+  git:
+    repo: https://github.com/nodenv/nodenv
+    dest: /home/{{ deploy_user }}/.nodenv
+    version: v{{ nodenv_version }}
+
+- name: Add nodenv path line to shell config file
+  lineinfile:
+    line: export PATH="$HOME/.nodenv/bin:$PATH"
+    dest: /home/{{ deploy_user }}/.bashrc
+
+- name: Add nodenv init line to shell config file
+  lineinfile:
+    line: eval "$(nodenv init -)"
+    dest: /home/{{ deploy_user }}/.bashrc
+
+- name: Install node-build
+  git:
+    repo: https://github.com/nodenv/node-build.git
+    dest: /home/{{ deploy_user }}/.nodenv/plugins/node-build
+
+# - name: Change nodenv owner to deploy user
+#   file:
+#     path: /home/{{ deploy_user }}/.nodenv
+#     state: directory
+#     owner: "{{ deploy_user }}"
+#     group: "{{ deploy_user }}"
+#     recurse: yes
+#     mode: 0755
