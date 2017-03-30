@@ -18,6 +18,17 @@ Use this ansible playbook to setup a fresh server with the following components:
 * Tools (tmux, vim, htop, git, wget, curl etc.)
 * DB backup using backup gem
 
+
+## Install Ansible
+
+**Brew**
+
+```brew install ansible```
+
+**APT**
+
+```apt-get install ansible```
+
 ## Prerequisites & Config
 
 1. Copy ```hosts.example``` to ```hosts``` and modify the contents.
