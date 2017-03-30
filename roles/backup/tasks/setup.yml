@@ -10,10 +10,26 @@
 - name: Install whenever gem
   command: su - {{ deploy_user }} -c "gem install whenever"
 
-- name: Backup Cronjob
+- name: Hourly Backup Cronjob
   cron:
-    name: "backup {{ postgres_db_name }}"
-    hour: "10"
-    minute: "00"
-    job: "backup perform -t db_backup"
+    name: "hourly backup {{ postgres_db_name }}"
+    minute: "0"
+    job: "/bin/bash -l -c 'BACKUP_TYPE=hourly backup perform -t vital'"
+    user: "{{ deploy_user }}"
+
+- name: Daily Backup Cronjob
+  cron:
+    name: "daily backup {{ postgres_db_name }}"
+    hour: "5"
+    minute: "30"
+    job: "/bin/bash -l -c 'BACKUP_TYPE=daily backup perform -t vital'"
+    user: "{{ deploy_user }}"
+
+- name: Weekly Backup Cronjob
+  cron:
+    name: "weekly backup {{ postgres_db_name }}"
+    hour: "5"
+    minute: "10"
+    weekday: "0"
+    job: "/bin/bash -l -c 'BACKUP_TYPE=weekly backup perform -t vital'"
     user: "{{ deploy_user }}"

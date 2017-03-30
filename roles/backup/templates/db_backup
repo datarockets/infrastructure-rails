@@ -1,19 +1,8 @@
 # encoding: utf-8
 
-##
-# Backup Generated: db_backup
-# Once configured, you can run the backup with the following command:
-#
-# $ backup perform -t db_backup [-c <path_to_configuration_file>]
-#
-# For more information about Backup's components, see the documentation at:
-# http://backup.github.io/backup
-#
-Model.new(:db_backup, 'Description for {{ postgres_db_name }}') do
+backup_type = ENV["BACKUP_TYPE"] || "manual"
 
-  ##
-  # PostgreSQL [Database]
-  #
+Model.new(:db_backup, 'Backups for {{ postgres_db_name }}') do
   database PostgreSQL do |db|
     db.name               = "{{ postgres_db_name }}"
     db.username           = "{{ postgres_db_username }}"
@@ -21,41 +10,66 @@ Model.new(:db_backup, 'Description for {{ postgres_db_name }}') do
     db.host               = "localhost"
   end
 
+  compress_with Bzip2
+
+  encrypt_with OpenSSL do |encryption|
+    encryption.password = "{{ backup_encrypt_password }}"
+    encryption.base64 = false
+    encryption.salt = true
+  end
+  # To decrypt your backup, use the following command:
+  # $ openssl aes-256-cbc -d -in {{ postgres_db_name }}.tar.enc -out {{ postgres_db_name }}.tar
+
   {% if backup_store is defined and backup_store == 'scp' %}
-  ##
-  # SCP (Secure Copy) [Storage]
-  #
   store_with SCP do |server|
     server.username   = "{{ backup_scp_username }}"
     server.password   = "{{ backup_scp_password }}"
     server.ip         = "{{ backup_scp_ip }}"
     server.port       = {{ backup_scp_port }}
-    server.path       = "{{ backup_scp_path }}"
-    server.keep       = 10
+    server.path       = "{{ backup_scp_path }}#{backup_type}/"
   end
 
   {% endif %}
 
 
   {% if backup_store is defined and backup_store == 's3' %}
-  ##
-  # Amazon Simple Storage Service [Storage]
-  #
   store_with S3 do |s3|
-    # AWS Credentials
     s3.access_key_id     = "{{ backup_s3_access_key_id }}"
     s3.secret_access_key = "{{ backup_s3_secret_access_key }}"
-
     s3.region            = "{{ backup_s3_bucket }}"
     s3.bucket            = "{{ backup_s3_region }}"
-    s3.path              = "/backups"
-    s3.keep              = 10
+    s3.path              = backup_type
   end
 
   {% endif %}
 
-  ##
-  # Gzip [Compressor]
-  #
-  compress_with Gzip
+  store_with Local, backup_type do |local|
+    local.path = "~/backups/#{backup_type}"
+
+    # keep only 16 last backups on this server in order not to overuse storage
+    # more backups on s3
+    local.keep = 16
+  end
+
+  {% if backup_daily_webhook_url is defined %}
+  if ["daily", "weekly"].include?(backup_type)
+    notify_by Slack do |slack|
+      slack.on_success = true
+      slack.on_warning = true
+      slack.on_failure = true
+      slack.webhook_url = "{{ backup_daily_webhook_url }}"
+    end
+  end
+  {% endif %}
+
+  {% if backup_hourly_webhook_url is defined %}
+  if ["hourly", "manual"].include?(backup_type)
+    notify_by Slack do |slack|
+      slack.on_success = false
+      slack.on_warning = false
+      slack.on_failure = true
+      slack.webhook_url = "{{ backup_hourly_webhook_url }}"
+    end
+  end
+  {% endif %}
 end
