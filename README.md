@@ -17,6 +17,7 @@ Use this ansible playbook to setup a fresh server with the following components:
 * Swapfile (useful for small DO instances)
 * Tools (tmux, vim, htop, git, wget, curl etc.)
 * DB backup using backup gem
+* Logrotate
 
 
 ## Install Ansible
