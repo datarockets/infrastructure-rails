@@ -1,11 +1,11 @@
 #!/usr/bin/env puma
 
-bind 'unix://{{ deploy_dir }}{{ deploy_app_name }}/shared/tmp/sockets/puma.sock'
-directory '{{ deploy_dir  }}{{ deploy_app_name }}/current'
-rackup "{{ deploy_dir  }}{{ deploy_app_name }}/current/config.ru"
-pidfile "{{ deploy_dir  }}{{ deploy_app_name }}/shared/tmp/pids/puma.pid"
-state_path "{{ deploy_dir  }}{{ deploy_app_name }}/shared/tmp/pids/puma.state"
-stdout_redirect '{{ deploy_dir  }}{{ deploy_app_name }}/shared/log/puma_access.log', '{{ deploy_dir  }}{{ deploy_app_name }}/shared/log/puma_error.log', true
+bind 'unix://{{ deploy_dir }}{{ deploy_app_dir }}/shared/tmp/sockets/puma.sock'
+directory '{{ deploy_dir  }}{{ deploy_app_dir }}/current'
+rackup "{{ deploy_dir  }}{{ deploy_app_dir }}/current/config.ru"
+pidfile "{{ deploy_dir  }}{{ deploy_app_dir }}/shared/tmp/pids/puma.pid"
+state_path "{{ deploy_dir  }}{{ deploy_app_dir }}/shared/tmp/pids/puma.state"
+stdout_redirect '{{ deploy_dir  }}{{ deploy_app_dir }}/shared/log/puma_access.log', '{{ deploy_dir  }}{{ deploy_app_dir }}/shared/log/puma_error.log', true
 
 environment 'production'
 threads {{ puma_threads }}
@@ -16,7 +16,7 @@ prune_bundler
 
 on_restart do
   puts 'Refreshing Gemfile'
-  ENV["BUNDLE_GEMFILE"] = "{{ deploy_dir  }}{{ deploy_app_name }}/current/Gemfile"
+  ENV["BUNDLE_GEMFILE"] = "{{ deploy_dir  }}{{ deploy_app_dir }}/current/Gemfile"
 end
 
 # Required for preload_app!
