@@ -1,22 +1,23 @@
 #!/usr/bin/env puma
 
-bind 'unix://{{ deploy_dir }}{{ deploy_app_dir }}/shared/tmp/sockets/puma.sock'
-directory '{{ deploy_dir  }}{{ deploy_app_dir }}/current'
-rackup "{{ deploy_dir  }}{{ deploy_app_dir }}/current/config.ru"
-pidfile "{{ deploy_dir  }}{{ deploy_app_dir }}/shared/tmp/pids/puma.pid"
-state_path "{{ deploy_dir  }}{{ deploy_app_dir }}/shared/tmp/pids/puma.state"
-stdout_redirect '{{ deploy_dir  }}{{ deploy_app_dir }}/shared/log/puma_access.log', '{{ deploy_dir  }}{{ deploy_app_dir }}/shared/log/puma_error.log', true
+bind "unix://{{ deploy_dir }}{{ deploy_app_dir }}/shared/tmp/sockets/puma.sock"
+directory "{{ deploy_dir }}{{ deploy_app_dir }}/current"
+rackup "{{ deploy_dir }}{{ deploy_app_dir }}/current/config.ru"
+pidfile "{{ deploy_dir }}{{ deploy_app_dir }}/shared/tmp/pids/puma.pid"
+state_path "{{ deploy_dir }}{{ deploy_app_dir }}/shared/tmp/pids/puma.state"
+stdout_redirect "{{ deploy_dir }}{{ deploy_app_dir }}/shared/log/puma_access.log", "{{ deploy_dir }}{{ deploy_app_dir }}/shared/log/puma_error.log", true
 
-environment 'production'
-threads {{ puma_threads }}
-workers {{ puma_workers }}
+environment ENV.fetch("RAILS_ENV") { "production" }
+
+threads ENV.fetch("PUMA_THREADS") { 4 }.to_i
+workers ENV.fetch("PUMA_WORKERS") { 4 }.to_i
 
 preload_app!
 prune_bundler
 
 on_restart do
-  puts 'Refreshing Gemfile'
-  ENV["BUNDLE_GEMFILE"] = "{{ deploy_dir  }}{{ deploy_app_dir }}/current/Gemfile"
+  puts "Refreshing Gemfile"
+  ENV["BUNDLE_GEMFILE"] = "{{ deploy_dir }}{{ deploy_app_dir }}/current/Gemfile"
 end
 
 # Required for preload_app!

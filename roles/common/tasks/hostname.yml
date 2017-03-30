@@ -1,2 +1,2 @@
-- name: set hostname
+- name: Set hostname
   hostname: name={{ deploy_server_hostname }}

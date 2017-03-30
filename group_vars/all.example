@@ -32,7 +32,7 @@ postgres_db_username: SET_USERNAME_HERE
 postgres_db_password: SET_PASSWORD_HERE
 
 # Ruby
-ruby_version: 2.2.3
+ruby_version: 2.4.0
 
 # Rails
 rails_use_dot_env: true
@@ -43,7 +43,7 @@ puma_threads: 4,16
 
 # Elasticsearch
 elasticsearch_enabled: false
-elasticsearch_version: 2.3.1
+elasticsearch_version: 5.3.0
 
 # Monit
 monit_enabled: false

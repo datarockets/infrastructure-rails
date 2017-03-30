@@ -8,7 +8,7 @@
 
 - name: Copy nginx configuration (without HTTPS enabled)
   template: src=nginx_app_config dest=/etc/nginx/sites-available/{{ deploy_app_name }} owner=root group=root
-  when: nginx_https_enabled is defined and nginx_https_enabled != true
+  when: nginx_https_enabled is defined and nginx_https_enabled == false
 
 - name: Disable default config
   file: path=/etc/nginx/sites-enabled/default state=absent
