@@ -27,3 +27,4 @@
     - elasticsearch
     - backup
     - logrotate
+    - node
