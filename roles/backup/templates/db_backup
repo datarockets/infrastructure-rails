@@ -43,7 +43,7 @@ Model.new(:db_backup, 'Backups for {{ postgres_db_name }}') do
 
   {% endif %}
 
-  store_with Local do |local|
+  store_with Local, backup_type do |local|
     local.path = "~/backups/#{backup_type}"
 
     # keep only 16 last backups on this server in order not to overuse storage
